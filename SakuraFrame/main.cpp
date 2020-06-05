@@ -10,9 +10,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Type.h"
+#include "glm/glm.hpp"
 
-#include "../include/glm/glm.hpp"
+#include "Type.h"
 #include "Mesh.h"
 
 #define STB_IMAGE_IMPLEMENTATION

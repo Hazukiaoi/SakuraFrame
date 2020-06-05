@@ -92,12 +92,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalUsingDirectories>$(ProjectName)\packages\glfw.3.3.2\build\native\include;$(ProjectName)\packages\glew.1.9.0.1\build\native\include;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectName)\include\;$(ProjectName)\packages\glew.1.9.0.1\build\native\include;$(ProjectName)\packages\glfw.3.3.2\build\native\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include\;$(SolutionDir)packages\glew.1.9.0.1\build\native\include;$(SolutionDir)packages\glfw.3.3.2\build\native\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>opengl32.lib;glew.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\SakuraFrame\SakuraFrame\packages\glew.1.9.0.1\build\native\lib\v110\x64\Debug\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)packages\glew.1.9.0.1\build\native\lib\v110\x64\Debug\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

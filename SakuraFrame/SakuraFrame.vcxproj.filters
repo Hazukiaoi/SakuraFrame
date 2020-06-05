@@ -13,14 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\Math">
-      <UniqueIdentifier>{0160c49e-fd29-44c6-b827-63b5a78b0d7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Core">
       <UniqueIdentifier>{b6e44e6a-2e29-4827-8190-d68db503d467}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\Core\Render">
       <UniqueIdentifier>{b931a803-394f-4fe8-8527-a18b384d08da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Core\Math">
+      <UniqueIdentifier>{0160c49e-fd29-44c6-b827-63b5a78b0d7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +36,7 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MathLib.h">
-      <Filter>头文件\Math</Filter>
+      <Filter>头文件\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Type.h">
       <Filter>头文件\Core</Filter>
