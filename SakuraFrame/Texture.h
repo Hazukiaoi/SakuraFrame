@@ -59,11 +59,17 @@ public:
         //unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
     }
 
+    void BindTexture(GLenum channel)
+    {
+        glActiveTexture(channel);
+        glBindTexture(GL_TEXTURE_2D, texture);
+    }
+
     void SetUp()
     {
         glGenTextures(1, &texture);
-        glActiveTexture(GL_TEXTURE0);           //把激活Texture0位置，
-        glBindTexture(GL_TEXTURE_2D, texture); //把当前操作纹理绑定到GL_TEXTURE_2D槽上，因为上面激活了Texture0位置，所以此时绑定操作此纹理都会放到Texture0上
+        //glActiveTexture(GL_TEXTURE0);           //把激活Texture0位置，
+        glBindTexture(GL_TEXTURE_2D, texture); //把当前操作纹理绑定到GL_TEXTURE_2D槽上
         // 为当前绑定的纹理对象设置环绕、过滤方式
         SetUp(GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 

@@ -28,6 +28,9 @@
     <Filter Include="源文件\imgui">
       <UniqueIdentifier>{1c0599b5-5de9-4955-bc4c-b4d0fe13b455}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Core">
+      <UniqueIdentifier>{dd67107f-f981-445b-905a-6d48d628afba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_glfw.cpp">
       <Filter>源文件\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>源文件\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_glfw.h">
       <Filter>头文件\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDefine.h">
+      <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,6 +14,7 @@
 
 #include "Type.h"
 #include "Mesh.h"
+#include "Material.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -38,8 +39,13 @@ float deltaTime, lastFrame;
 
 using namespace std;
 
+
 int main()
 {
+    ShaderLibrary shaders;
+    shaders.Create("UnlitShader", "Assets/UnlitVert.vert", "Assets/UnlitFrag.frag");
+    Material mat(shaders.Get("UnlitShader"));
+
     //int _width, _height, _nrChannels;
     //unsigned char* data = stbi_load("testImg.jpg", &_width, &_height, &_nrChannels, 0);
 
