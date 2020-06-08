@@ -110,5 +110,11 @@
     <ClInclude Include="BaseDefine.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

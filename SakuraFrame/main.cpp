@@ -23,6 +23,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
 
+#include <vector>
+
 //窗口尺寸重置的时候的回调
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 //输入事件
@@ -37,14 +39,11 @@ void InitImGUI(GLFWwindow* window, const char* glsl_version);
 
 float deltaTime, lastFrame;
 
-using namespace std;
+
 
 
 int main()
 {
-    ShaderLibrary shaders;
-    shaders.Create("UnlitShader", "Assets/UnlitVert.vert", "Assets/UnlitFrag.frag");
-    Material mat(shaders.Get("UnlitShader"));
 
     //int _width, _height, _nrChannels;
     //unsigned char* data = stbi_load("testImg.jpg", &_width, &_height, &_nrChannels, 0);
