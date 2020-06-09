@@ -47,18 +47,22 @@ float deltaTime, lastFrame;
 
 ECSManager*ecsManager;
 
+
 int main()
 {
+
     ecsManager = new ECSManager();
     Entity& camera = ecsManager->AddEntity();
-    camera.AddComponent<Transform>();
+    Transform t{ Vector3(1,2,4), Vector3(0,0,0), Vector3(1,2,3) };
+    camera.AddComponent<Transform>(t);
     camera.AddComponent<Camera>();
 
-    Entity& light = ecsManager->AddEntity();
-    light.AddComponent<Transform>();
-    light.AddComponent<Light>();
 
-    return 0;
+    //Entity& light = ecsManager->AddEntity();
+    //light.AddComponent<Transform>();
+    //light.AddComponent<Light>();
+
+    //return 0;
 
     //int _width, _height, _nrChannels;
     //unsigned char* data = stbi_load("testImg.jpg", &_width, &_height, &_nrChannels, 0);
