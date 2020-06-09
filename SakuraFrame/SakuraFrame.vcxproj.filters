@@ -31,6 +31,9 @@
     <Filter Include="源文件\Core">
       <UniqueIdentifier>{dd67107f-f981-445b-905a-6d48d628afba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Core\ECS">
+      <UniqueIdentifier>{3a5c45da-18e4-4a55-a897-a6706753eb4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Ecs.h">
+      <Filter>头文件\Core\ECS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
