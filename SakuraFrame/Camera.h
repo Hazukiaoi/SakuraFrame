@@ -1,8 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Type.h"
+#include "ECS.h"
 
-struct Camera
+class Camera : public Component
 {
 private:
 

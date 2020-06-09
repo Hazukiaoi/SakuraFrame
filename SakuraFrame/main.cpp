@@ -25,6 +25,11 @@
 
 #include <vector>
 
+#include "ECS.h"
+#include "Transform.h"
+#include "Light.h"
+#include "Camera.h"
+
 //窗口尺寸重置的时候的回调
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 //输入事件
@@ -40,10 +45,20 @@ void InitImGUI(GLFWwindow* window, const char* glsl_version);
 float deltaTime, lastFrame;
 
 
-
+ECSManager*ecsManager;
 
 int main()
 {
+    ecsManager = new ECSManager();
+    Entity& camera = ecsManager->AddEntity();
+    camera.AddComponent<Transform>();
+    camera.AddComponent<Camera>();
+
+    Entity& light = ecsManager->AddEntity();
+    light.AddComponent<Transform>();
+    light.AddComponent<Light>();
+
+    return 0;
 
     //int _width, _height, _nrChannels;
     //unsigned char* data = stbi_load("testImg.jpg", &_width, &_height, &_nrChannels, 0);

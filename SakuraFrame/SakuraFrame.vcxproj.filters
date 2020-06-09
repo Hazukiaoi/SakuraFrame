@@ -34,6 +34,9 @@
     <Filter Include="头文件\Core\ECS">
       <UniqueIdentifier>{3a5c45da-18e4-4a55-a897-a6706753eb4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Core\Game">
+      <UniqueIdentifier>{bf835e93-a5f4-4b95-bd33-9e5ba314ed9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -119,7 +122,10 @@
     <ClInclude Include="Light.h">
       <Filter>头文件\Core\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Ecs.h">
+    <ClInclude Include="Transform.h">
+      <Filter>头文件\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.h">
       <Filter>头文件\Core\ECS</Filter>
     </ClInclude>
   </ItemGroup>

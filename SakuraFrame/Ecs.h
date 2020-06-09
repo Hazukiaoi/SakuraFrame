@@ -10,7 +10,7 @@
 class Component;
 class Entity;
 
-typedef std::size_t ComponentID;
+using ComponentID = std::size_t ;
 
 inline ComponentID GetComponentTypeID()
 {
@@ -21,13 +21,13 @@ inline ComponentID GetComponentTypeID()
 template<typename T> inline ComponentID GetComponentTypeID() noexcept
 {
 	static ComponentID typeID = GetComponentTypeID();
-	return typeID();
+	return typeID;
 }
 
 constexpr std::size_t maxComponent = 32;
 
-typedef std::bitset<maxComponent>				ComponentBitset;
-typedef std::array<Component*, maxComponent>	ComponentArray;
+using ComponentBitset = std::bitset<maxComponent>;
+using ComponentArray = std::array<Component*, maxComponent>	;
 
 
 class Component
@@ -75,18 +75,18 @@ public:
 		componentArray[GetComponentTypeID<T>()] = c;
 		componentBitset[GetComponentTypeID<T>()] = true;
 
-		c->init();
+		c->Init();
 		return *c;
 	}
 
 	template<typename T> T& GetComponent() const 
 	{
-		auto prt(componentArray[GetComponentTypeID<T>()]);
+		auto ptr(componentArray[GetComponentTypeID<T>()]);
 		return *static_cast<T*>(ptr);
 	}
 };
 
-class Manager
+class ECSManager
 {
 private:
 	std::vector<std::unique_ptr<Entity>> entities;

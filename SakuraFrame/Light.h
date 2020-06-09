@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ECS.h"
+
 enum class LightType
 {
 	LIGHT_DIRECTTIONAL,
@@ -7,7 +9,7 @@ enum class LightType
 	LIGHT_SPOT,
 };
 
-struct Light
+class Light : public Component
 {
 
 public:

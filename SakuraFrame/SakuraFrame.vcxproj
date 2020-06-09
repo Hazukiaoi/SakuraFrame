@@ -154,7 +154,7 @@
   <ItemGroup>
     <ClInclude Include="BaseDefine.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Ecs.h" />
+    <ClInclude Include="ECS.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />
@@ -170,6 +170,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
