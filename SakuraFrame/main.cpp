@@ -54,7 +54,7 @@ int main()
     ecsManager = new ECSManager();
     Entity& camera = ecsManager->AddEntity();
     Transform t{ Vector3(1,2,4), Vector3(0,0,0), Vector3(1,2,3) };
-    camera.AddComponent<Transform>(t);
+    camera.AddComponent<Transform>();
     camera.AddComponent<Camera>();
 
 

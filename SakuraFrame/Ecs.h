@@ -79,10 +79,10 @@ public:
 		return *c;
 	}
 
-	template<typename T> T& GetComponent() const 
+	template<typename T> T* GetComponent() const 
 	{
 		auto ptr(componentArray[GetComponentTypeID<T>()]);
-		return *static_cast<T*>(ptr);
+		return static_cast<T*>(ptr);
 	}
 };
 

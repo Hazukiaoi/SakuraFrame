@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS.h"
+#include "Type.h"
 
 enum class LightType
 {
@@ -14,11 +15,15 @@ class Light : public Component
 
 public:
 	float intensity;
+	float range;
 	LightType type;
+	Color color;
 
 	Light()
 	{
 		intensity = 1.0f;
+		range = 10.f;
 		type = LightType::LIGHT_DIRECTTIONAL;
+		color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 };
