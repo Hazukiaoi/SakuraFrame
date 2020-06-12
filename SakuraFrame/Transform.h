@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
+
 class Transform : public Component
 {
 public:
@@ -19,17 +21,31 @@ public:
 	Matrix4x4 WorldToObject;
 	Matrix4x4 ObjectToWorld;
 
+
 	Vector3 Position	= Vector3(0, 0, 0);
 	Vector3 Euler		= Vector3(0, 0, 0);
 	Vector3 Scale		= Vector3(1, 1, 1);
 
+	Quaternion Rotation;
+
 	Transform()
 	{
 		ObjectToWorld = glm::mat4(1.0f);
-		//设置基础向量
-		ObjectToWorld[0] = Vector4(Right.x,   Right.y,   Right.z,   0.0f);
-		ObjectToWorld[1] = Vector4(Up.x,	  Up.y,	     Up.z,      0.0f);
-		ObjectToWorld[2] = Vector4(Forward.x, Forward.y, Forward.z, 0.0f);
+
+		Rotation = Quaternion(Euler);
+
+		////设置基础向量
+		//ObjectToWorld[0] = Vector4(Right.x,   Right.y,   Right.z,   0.0f);
+		//ObjectToWorld[1] = Vector4(Up.x,	  Up.y,	     Up.z,      0.0f);
+		//ObjectToWorld[2] = Vector4(Forward.x, Forward.y, Forward.z, 0.0f);
+
+		Right =		Rotation * Vector3(1.0f, 0.0f, 0.0f);
+		Up =		Rotation * Vector3(0.0f, 1.0f, 0.0f);
+		Forward =	Rotation * Vector3(0.0f, 0.0f, 1.0f);
+
+		//用四元数角度设置基础向量
+		ObjectToWorld = glm::toMat4(Rotation);
+
 		//ObjectToWorld = glm::rotate(ObjectToWorld, Euler);
 		ObjectToWorld = glm::scale(ObjectToWorld, Scale);
 		ObjectToWorld = glm::translate(ObjectToWorld, Position);
@@ -40,6 +56,27 @@ public:
 
 	Transform(Vector3 pos, Vector3 euler, Vector3 scale) : Position(pos), Euler(euler), Scale(scale) 
 	{
-		Transform();
+		ObjectToWorld = glm::mat4(1.0f);
+
+		Rotation = Quaternion(Euler);
+
+		////设置基础向量
+		//ObjectToWorld[0] = Vector4(Right.x,   Right.y,   Right.z,   0.0f);
+		//ObjectToWorld[1] = Vector4(Up.x,	  Up.y,	     Up.z,      0.0f);
+		//ObjectToWorld[2] = Vector4(Forward.x, Forward.y, Forward.z, 0.0f);
+
+		Right = Rotation * Vector3(1.0f, 0.0f, 0.0f);
+		Up = Rotation * Vector3(0.0f, 1.0f, 0.0f);
+		Forward = Rotation * Vector3(0.0f, 0.0f, 1.0f);
+
+		//用四元数角度设置基础向量
+		ObjectToWorld = glm::toMat4(Rotation);
+
+		//ObjectToWorld = glm::rotate(ObjectToWorld, Euler);
+		ObjectToWorld = glm::scale(ObjectToWorld, Scale);
+		ObjectToWorld = glm::translate(ObjectToWorld, Position);
+
+		//设置逆向量
+		WorldToObject = glm::inverse(ObjectToWorld);
 	}
 };
