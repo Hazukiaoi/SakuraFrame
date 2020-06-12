@@ -15,9 +15,25 @@ public:
     unsigned char *data = nullptr;
     unsigned int texture;
 
-    Texture() {};
+    GLenum Warp_s, Warp_t;
+    GLenum Min_filter, Mag_filter;
+
+    int mipmapLevel = 0;
+
+    Texture() 
+    {
+        glGenTextures(1, &texture);
+
+        Warp_s = Warp_t = GL_REPEAT;
+        Min_filter = Mag_filter = GL_LINEAR;
+    }
     Texture(int width, int height, int channels) :width(width), height(height), nrChannels(channels)
     {
+        glGenTextures(1, &texture);
+
+        Warp_s = Warp_t = GL_REPEAT;
+        Min_filter = Mag_filter = GL_LINEAR;
+
         int len = width * height * nrChannels;
         data = (unsigned char*)malloc(len);
     }
@@ -26,7 +42,7 @@ public:
     {
         if (x < 0 || x >= width || y < 0 || y >= height) return;
 
-        int p = (x + y * height) * 3;
+        int p = (x + y * height) * nrChannels;
         data[p] = (char)int(color.r * 255.99f);
         data[p + 1] = (char)int(color.g * 255.99f);
         data[p + 2] = (char)int(color.b * 255.99f);
@@ -34,28 +50,70 @@ public:
         
     }
 
-    virtual void SetUp(int warp_s_type, int warp_t_type, int min_filter, int mag_filter)
+    virtual Color GetPixel(int x, int y)
     {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warp_s_type);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warp_t_type);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+        Color c = Color();
+        int p = (x + y * height) * nrChannels;
+        c.r = int(data[p]) / 256.0f;
+        c.g = int(data[p + 1]) / 256.0f;
+        c.b = int(data[p + 2]) / 256.0f;
+
+        if (nrChannels > 3)
+        {
+            c.a = int(data[p + 3]) / 256.0f;
+        }
+        return c;
     }
+
+    //virtual void SetUp(int warp_s_type, int warp_t_type, int min_filter, int mag_filter)
+    //{
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warp_s_type);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warp_t_type);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+    //}
+
+    //单独设置每个环绕参数
+    virtual void SetWarpS(GLenum type) 
+    { 
+        Warp_s = type; 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, Warp_s);
+    }
+    virtual void SetWarpT(GLenum type) 
+    { 
+        Warp_t = type; 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, Warp_t);
+    }
+    virtual void SetMinFilter(GLenum type)
+    { 
+        Min_filter = type; 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Min_filter);
+    }
+    virtual void SetMagFilter(GLenum type) 
+    { 
+        Mag_filter = type; 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mag_filter);
+    }
+
 
     virtual void SetUp()
     {
-        glGenTextures(1, &texture);
         //glActiveTexture(GL_TEXTURE0);           //把激活Texture0位置，
         glBindTexture(GL_TEXTURE_2D, texture); //把当前操作纹理绑定到GL_TEXTURE_2D槽上
         // 为当前绑定的纹理对象设置环绕、过滤方式
-        SetUp(GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+        //SetUp(GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, Warp_s);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, Warp_t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Min_filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Mag_filter);
 
         //绑定数据到目标
         if (data)
         {
             glTexImage2D(
                 GL_TEXTURE_2D,                                  //绑定的位置
-                0,                                              //Mipmap级数0，基础级数
+                mipmapLevel,                                    //Mipmap级数0，基础级数
                 nrChannels > 3 ? GL_RGBA : GL_RGB,              //纹理储存格式
                 width,                                          //宽
                 height,                                         //高
@@ -64,11 +122,18 @@ public:
                 GL_UNSIGNED_BYTE,                               //储存为char(byte)数组 （上面读入的）
                 data);
 
-            glGenerateMipmap(GL_TEXTURE_2D);    //生成mipmap
+            if(mipmap) glGenerateMipmap(GL_TEXTURE_2D);    //生成mipmap
         }
+    }
 
-        free(data);
-        data = nullptr;
+    virtual void Release()
+    {
+        if (&data != nullptr)
+        {
+            free(data);
+            data = nullptr;
+
+        }
     }
 
     ~Texture()
@@ -77,6 +142,7 @@ public:
         if (&data != nullptr)
         {
             free(data);
+            data = nullptr;
         }
             //stbi_image_free(data);
     }
@@ -86,7 +152,9 @@ class Texture2D : public Texture
 {
 
 public:
-    Texture2D() {};
+    Texture2D() 
+    {
+    };
     Texture2D(int width, int height)
     {
         this->width = width;
@@ -119,52 +187,49 @@ public:
         glBindTexture(GL_TEXTURE_2D, texture);
     }
 
-    void SetUp()
-    {
-        glGenTextures(1, &texture);
-        //glActiveTexture(GL_TEXTURE0);           //把激活Texture0位置，
-        glBindTexture(GL_TEXTURE_2D, texture); //把当前操作纹理绑定到GL_TEXTURE_2D槽上
-        // 为当前绑定的纹理对象设置环绕、过滤方式
-        SetUp(GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+    //void SetUp()
+    //{
+    //    glGenTextures(1, &texture);
+    //    //glActiveTexture(GL_TEXTURE0);           //把激活Texture0位置，
+    //    glBindTexture(GL_TEXTURE_2D, texture); //把当前操作纹理绑定到GL_TEXTURE_2D槽上
+    //    // 为当前绑定的纹理对象设置环绕、过滤方式
+    //    SetUp(GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
-        //绑定数据到目标
-        if (data)
-        {
-            glTexImage2D(
-                GL_TEXTURE_2D,                                  //绑定的位置
-                0,                                              //Mipmap级数0，基础级数
-                nrChannels > 3 ? GL_RGBA : GL_RGB,              //纹理储存格式
-                width,                                          //宽
-                height,                                         //高
-                0,                                              //历史遗留问题，肯定填0
-                nrChannels > 3 ? GL_RGBA : GL_RGB,              //原图格式，此处使用RGB加载
-                GL_UNSIGNED_BYTE,                               //储存为char(byte)数组 （上面读入的）
-                data);
+    //    //绑定数据到目标
+    //    if (data)
+    //    {
+    //        glTexImage2D(
+    //            GL_TEXTURE_2D,                                  //绑定的位置
+    //            0,                                              //Mipmap级数0，基础级数
+    //            nrChannels > 3 ? GL_RGBA : GL_RGB,              //纹理储存格式
+    //            width,                                          //宽
+    //            height,                                         //高
+    //            0,                                              //历史遗留问题，肯定填0
+    //            nrChannels > 3 ? GL_RGBA : GL_RGB,              //原图格式，此处使用RGB加载
+    //            GL_UNSIGNED_BYTE,                               //储存为char(byte)数组 （上面读入的）
+    //            data);
 
-            glGenerateMipmap(GL_TEXTURE_2D);    //生成mipmap
-        }
-        else
-        {
-            std::cout << "Faild To Load Texture" << std::endl;
-        }
+    //        glGenerateMipmap(GL_TEXTURE_2D);    //生成mipmap
+    //    }
+    //    else
+    //    {
+    //        std::cout << "Faild To Load Texture" << std::endl;
+    //    }
+    //    std::cout << "Load Texture Finish" << std::endl;
+    //}
 
-        free(data);
-        data = nullptr;
-        std::cout << "Load Texture Finish" << std::endl;
-    }
+    //void SetUp(int warp_s_type, int warp_t_type, int min_filter, int mag_filter)
+    //{
+    //    
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warp_s_type);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warp_t_type);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+    //}
 
-    void SetUp(int warp_s_type, int warp_t_type, int min_filter, int mag_filter)
-    {
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warp_s_type);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warp_t_type);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
-    }
-
-    ~Texture2D()
-    {
-        //if(data)
-        //    free(data);
-    }
+    //~Texture2D()
+    //{
+    //    //if(data)
+    //    //    free(data);
+    //}
 };

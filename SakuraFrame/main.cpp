@@ -179,19 +179,20 @@ int main()
 
     //free(img);
 
-    ////Tex2D 贴图加载显示测试
-    //Texture2D tex2D = Texture2D("Save.dat");
-    //tex2D.SetUp();
-
-    //创建贴图
-    Texture tex2D = Texture(256, 256, 3);
-    for (int y = 0; y < 256; y++)
-        for (int x = 0; x < 256; x++)
-        {
-            Color c = Color(float(x) / 256.0f, float(y) / 256.0f, 0.0f, 1.0f);
-            tex2D.SetPixel(c, x, y);
-        }
+    //Tex2D 贴图加载显示测试
+    Texture2D tex2D = Texture2D("Save.dat");
     tex2D.SetUp();
+    tex2D.Release();
+
+    ////创建贴图
+    //Texture tex2D = Texture(256, 256, 3);
+    //for (int y = 0; y < 256; y++)
+    //    for (int x = 0; x < 256; x++)
+    //    {
+    //        Color c = Color(float(x) / 256.0f, float(y) / 256.0f, 0.0f, 1.0f);
+    //        tex2D.SetPixel(c, x, y);
+    //    }
+    //tex2D.SetUp();
 
     while (!glfwWindowShouldClose(window))
     {
