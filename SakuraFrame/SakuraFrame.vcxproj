@@ -150,6 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ShaderSrc\Unlit.frag" />
+    <None Include="ShaderSrc\Unlit.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseDefine.h" />

@@ -45,23 +45,22 @@ void InitImGUI(GLFWwindow* window, const char* glsl_version);
 float deltaTime, lastFrame;
 
 
-ECSManager*ecsManager;
+ECSManager *ecsManager;
 
 
 int main()
 {
+    //ecsManager = new ECSManager();
+    //Entity& camera = ecsManager->AddEntity();
+    //Transform t{ Vector3(1,2,4), Vector3(0,0,0), Vector3(1,2,3) };
+    //camera.AddComponent<Transform>();
+    //camera.AddComponent<Camera>();
 
-    ecsManager = new ECSManager();
-    Entity& camera = ecsManager->AddEntity();
-    Transform t{ Vector3(1,2,4), Vector3(0,0,0), Vector3(1,2,3) };
-    camera.AddComponent<Transform>();
-    camera.AddComponent<Camera>();
+    //// µ¿˝ªØShader
+    //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
 
 
-    //Entity& light = ecsManager->AddEntity();
-    //light.AddComponent<Transform>();
-    //light.AddComponent<Light>();
-
+    //getchar();
     //return 0;
 
     //int _width, _height, _nrChannels;
@@ -145,39 +144,54 @@ int main()
 
     Vector4 clear_color = Vector4{ 0.1f, 0.7f, 0.9f, 1 };
     
-    //≤‚ ‘Ã˘Õºœ‘ æ
-    GLuint tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    ////≤‚ ‘Ã˘Õºœ‘ æ
+    //GLuint tex;
+    //glGenTextures(1, &tex);
+    //glBindTexture(GL_TEXTURE_2D, tex);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    int width, height, nrChannels, len;
-    fstream readImg("Save.dat", ios::in | ios::binary);
+    //int width, height, nrChannels, len;
+    //fstream readImg("Save.dat", ios::in | ios::binary);
 
-    readImg.read((char*)&width, 4);
-    readImg.read((char*)&height, 4);
-    readImg.read((char*)&nrChannels, 4);
+    //readImg.read((char*)&width, 4);
+    //readImg.read((char*)&height, 4);
+    //readImg.read((char*)&nrChannels, 4);
 
-    cout << width << "|" << height << "|" << nrChannels << endl;
+    //cout << width << "|" << height << "|" << nrChannels << endl;
 
-    len = width * height * nrChannels;
+    //len = width * height * nrChannels;
 
-    unsigned char* img = (unsigned char*)malloc(len);
-    //unsigned char* img = stbi_load("testImg.jpg", &width, &height, &nrChannels, 0);
-    readImg.read((char*)img, len);
-    readImg.close();
+    //unsigned char* img = (unsigned char*)malloc(len);
+    ////unsigned char* img = stbi_load("testImg.jpg", &width, &height, &nrChannels, 0);
+    //readImg.read((char*)img, len);
+    //readImg.close();
 
-    if (img)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
 
-    free(img);
+    //if (img)
+    //{
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+    //    glGenerateMipmap(GL_TEXTURE_2D);
+    //}
+
+    //free(img);
+
+    ////Tex2D Ã˘Õºº”‘ÿœ‘ æ≤‚ ‘
+    //Texture2D tex2D = Texture2D("Save.dat");
+    //tex2D.SetUp();
+
+    //¥¥Ω®Ã˘Õº
+    Texture tex2D = Texture(256, 256, 3);
+    for (int y = 0; y < 256; y++)
+        for (int x = 0; x < 256; x++)
+        {
+            Color c = Color(float(x) / 256.0f, float(y) / 256.0f, 0.0f, 1.0f);
+            tex2D.SetPixel(c, x, y);
+        }
+    tex2D.SetUp();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -189,10 +203,10 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glBindTexture(GL_TEXTURE_2D, tex);
+        glBindTexture(GL_TEXTURE_2D, tex2D.texture);
         {
             ImGui::Begin("Img");
-            ImGui::Image((void*)(intptr_t)tex, ImVec2{ float(width), float(height) });
+            ImGui::Image((void*)(intptr_t)tex2D.texture, ImVec2{ float(tex2D.width), float(tex2D.height) });
             ImGui::End();
         }
 
