@@ -34,10 +34,7 @@ public:
 
     VertexData* vertices;
     unsigned int *triangles;
-
-private:
     unsigned int VAO, VBO, EBO;
-
 
 public:
 
@@ -54,7 +51,6 @@ public:
 
         cout << "relesed" << endl;
     }
-
 
     void LoadMesh(const char* path)
     {
@@ -113,9 +109,9 @@ public:
         glEnableVertexAttribArray(5);
 
         //½â°óVAO VBO EBO
-        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
 
     }
 };

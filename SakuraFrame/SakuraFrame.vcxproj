@@ -169,6 +169,9 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathLib.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshFilter.h" />
+    <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="Pipline.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />

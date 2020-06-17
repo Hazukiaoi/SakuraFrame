@@ -137,5 +137,14 @@
     <ClInclude Include="ECS.h">
       <Filter>头文件\Core\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshFilter.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipline.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

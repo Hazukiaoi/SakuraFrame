@@ -48,9 +48,9 @@ private:
 
 	std::vector<std::unique_ptr<Component>> components;
 
+public:
 	ComponentBitset componentBitset;
 	ComponentArray componentArray;
-public:
 	void Update()
 	{
 		for (auto& c : components) c->Update();

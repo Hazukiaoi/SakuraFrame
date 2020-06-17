@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Type.h"
 #include "Mesh.h"
@@ -29,6 +30,8 @@
 #include "Transform.h"
 #include "Light.h"
 #include "Camera.h"
+#include "MeshFilter.h"
+#include "MeshRenderer.h"
 
 //窗口尺寸重置的时候的回调
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -45,16 +48,17 @@ void InitImGUI(GLFWwindow* window, const char* glsl_version);
 float deltaTime, lastFrame;
 
 
-ECSManager *ecsManager;
+Ref<ECSManager> ecsManager;
+Ref<ShaderLibrary> shaderLib;
 
 
 int main()
 {
-    //ecsManager = new ECSManager();
-    //Entity& camera = ecsManager->AddEntity();
-    //Transform t{ Vector3(1,2,4), Vector3(0,0,0), Vector3(1,2,3) };
-    //camera.AddComponent<Transform>();
-    //camera.AddComponent<Camera>();
+    //初始化Shader库和ECS管理器
+    shaderLib = make_shared<ShaderLibrary>();
+    ecsManager = CreateRef<ECSManager>();
+
+     
 
     ////实例化Shader
     //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
@@ -143,7 +147,8 @@ int main()
     InitImGUI(window, glsl_version);
 
     Vector4 clear_color = Vector4{ 0.1f, 0.7f, 0.9f, 1 };
-    
+    glEnable(GL_DEPTH_TEST);
+
     ////测试贴图显示
     //GLuint tex;
     //glGenTextures(1, &tex);
@@ -184,6 +189,8 @@ int main()
     tex2D.SetUp();
     tex2D.Release();
 
+
+
     ////创建贴图
     //Texture tex2D = Texture(256, 256, 3);
     //for (int y = 0; y < 256; y++)
@@ -193,6 +200,83 @@ int main()
     //        tex2D.SetPixel(c, x, y);
     //    }
     //tex2D.SetUp();
+
+    //Shader shader = Shader("F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.vert", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.frag", "SF_Unlit");
+    ////Shader shader = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
+    //Mesh* mesh = new Mesh();
+    //mesh->LoadMesh("F:/SakuraFrame/SakuraFrame/x64/Debug/Suzanne.dat");
+    ////mesh->LoadMesh("Suzanne.dat");
+    //mesh->setupMesh();
+
+    ////for (int i = 0; i < mesh->vertexCount; i++)
+    ////{
+    ////    cout << mesh->vertices[i].vertex.x << "|" << mesh->vertices[i].vertex.y << "|" << mesh->vertices[i].vertex.z << "|" << endl;
+    ////}
+
+    Matrix4x4 localToWorld = Matrix4x4(1.0);
+    localToWorld = glm::translate(localToWorld, Vector3(0, 0, -5));
+
+    glm::mat4 view;
+    //view = glm::lookAt( glm::vec3(0.0f, 0.0f, -10.0f),
+    //                    glm::vec3(0.0f, 0.0f, 0.0f),
+    //                    glm::vec3(0.0f, 1.0f, 0.0f));
+    view[0] = Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+    view[1] = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+    view[2] = Vector4(0.0f, 0.0f, 1.0f, 0.0f);
+    view[3] = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    glm::mat4 proj = glm::perspective(glm::radians(35.0f), float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+
+    //创建Shader
+    //shaderLib->Create("SF_Unlit", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.vert", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.frag");
+    shaderLib->Create("SF_Unlit", "ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag");
+
+    //创建ECS示范
+    Entity& camera = ecsManager->AddEntity();
+    Transform t{ Vector3(0,0,0), Vector3(0,0,0), Vector3(1,1,1) };
+    camera.AddComponent<Transform>(t);
+    camera.AddComponent<Camera>();
+
+    Entity& directLight = ecsManager->AddEntity();
+    directLight.AddComponent<Transform>(Transform{ Vector3(0,0,0), Vector3(50,-30,0), Vector3(1,1,1) });
+    directLight.AddComponent<Light>();
+    
+    Light* l = directLight.GetComponent<Light>();
+    l->type = LightType::LIGHT_DIRECTTIONAL;
+    l->intensity = 3.0f;
+
+    Entity& suzanne = ecsManager->AddEntity();
+    suzanne.AddComponent<Transform>(Transform { Vector3(0,0,-3), Vector3(0,0,0), Vector3(1,1,1) });
+    suzanne.AddComponent<MeshFilter>();
+    suzanne.AddComponent<MeshRenderer>();
+
+    MeshFilter* mf = suzanne.GetComponent<MeshFilter>();
+    MeshRenderer* mr = suzanne.GetComponent<MeshRenderer>();
+
+
+    mf->mesh = new Mesh();
+    mf->mesh->LoadMesh("Suzanne.dat");
+    mf->mesh->setupMesh();
+
+    mr->material = new Material(shaderLib->Get("SF_Unlit"));
+
+    Ref<Shader> shader = shaderLib->Get("SF_Unlit");
+
+    //之后加上多个Component过滤的时候尝试用以下这种方法
+    ComponentBitset componentBitset;
+
+    componentBitset[GetComponentTypeID<MeshRenderer>()] = true;
+    componentBitset[GetComponentTypeID<Transform>()] = true;
+
+    auto b = (suzanne.componentBitset & componentBitset);
+
+    cout << suzanne.componentBitset << endl;
+    cout << componentBitset << endl;
+    cout << b << endl;
+    cout << b.any() << endl;
+    cout << b.all() << endl;
+    cout << b.none() << endl;
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -204,12 +288,15 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glBindTexture(GL_TEXTURE_2D, tex2D.texture);
-        {
-            ImGui::Begin("Img");
-            ImGui::Image((void*)(intptr_t)tex2D.texture, ImVec2{ float(tex2D.width), float(tex2D.height) });
-            ImGui::End();
-        }
+
+        //glBindTexture(GL_TEXTURE_2D, tex2D.texture);
+        //{
+        //    ImGui::Begin("Img");
+        //    ImGui::Image((void*)(intptr_t)tex2D.texture, ImVec2{ float(tex2D.width), float(tex2D.height) });
+        //    ImGui::End();
+        //}
+
+
 
         //{
         //    static float f = 0.0f;
@@ -248,8 +335,22 @@ int main()
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //Draw Mesh
+
+        shader->use();
+        shader->SetMatrix4x4("sf_mat_model", localToWorld);
+        shader->SetMatrix4x4("sf_mat_view", view);
+        shader->SetMatrix4x4("sf_mat_projection", proj);
+
+        glBindVertexArray(mf->mesh->VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mf->mesh->EBO);
+
+        glDrawElements(GL_TRIANGLES, mf->mesh->trianglesCount, GL_UNSIGNED_INT, 0);
+
+
+        //Draw ImGUI
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
