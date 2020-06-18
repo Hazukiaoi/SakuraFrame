@@ -7,6 +7,13 @@
 #include <bitset>
 #include <array>
 
+enum class COMPONENT_FILTER_TYPE
+{
+	ALL,
+	ANY,
+	NONE
+};
+
 class Component;
 class Entity;
 
@@ -91,6 +98,12 @@ class ECSManager
 private:
 	std::vector<std::unique_ptr<Entity>> entities;
 
+	template<typename T>
+	void BitsetCheck(ComponentBitset& bs)
+	{
+		bs[GetComponentTypeID<T>()] = true;
+	}
+
 public:
 	void Update()
 	{
@@ -106,6 +119,21 @@ public:
 			return !mEnity->IsActive();
 		}), 
 			std::end(entities));
+	}
+
+
+	template<typename... Args>
+	vector<Entity*> Filter()
+	{
+		ComponentBitset _bs;		
+		int _i[] = {(BitsetCheck<Args>(_bs), 0)...};
+
+		vector<Entity*> res;
+		for (auto& e : entities)
+		{
+			if (_bs == e->componentBitset) res.emplace_back(e.get());
+		}
+		return res;
 	}
 
 	Entity& AddEntity()

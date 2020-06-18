@@ -58,7 +58,6 @@ int main()
     shaderLib = make_shared<ShaderLibrary>();
     ecsManager = CreateRef<ECSManager>();
 
-     
 
     ////实例化Shader
     //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
@@ -245,6 +244,15 @@ int main()
     l->type = LightType::LIGHT_DIRECTTIONAL;
     l->intensity = 3.0f;
 
+    Entity& pointLight = ecsManager->AddEntity();
+    pointLight.AddComponent<Transform>(Transform{ Vector3(0,2,0), Vector3(50,-30,0), Vector3(1,1,1) });
+    pointLight.AddComponent<Light>();
+
+    Light* l1 = pointLight.GetComponent<Light>();
+    l1->type = LightType::LIGHT_POINT;
+    l1->intensity = 1.0f;
+
+
     Entity& suzanne = ecsManager->AddEntity();
     suzanne.AddComponent<Transform>(Transform { Vector3(0,0,-3), Vector3(0,0,0), Vector3(1,1,1) });
     suzanne.AddComponent<MeshFilter>();
@@ -262,20 +270,30 @@ int main()
 
     Ref<Shader> shader = shaderLib->Get("SF_Unlit");
 
-    //之后加上多个Component过滤的时候尝试用以下这种方法
-    ComponentBitset componentBitset;
+    auto es = ecsManager->Filter<Light, Transform>();
 
-    componentBitset[GetComponentTypeID<MeshRenderer>()] = true;
-    componentBitset[GetComponentTypeID<Transform>()] = true;
 
-    auto b = (suzanne.componentBitset & componentBitset);
+    cout << "Light Count:" <<  es.size() << endl;
+    for (auto& l : es)
+    {
+        cout << "Light:" << (int)l->GetComponent<Light>()->type << " | " << l->GetComponent<Light>()->intensity << endl;
+    }
 
-    cout << suzanne.componentBitset << endl;
-    cout << componentBitset << endl;
-    cout << b << endl;
-    cout << b.any() << endl;
-    cout << b.all() << endl;
-    cout << b.none() << endl;
+    return 0;
+    ////之后加上多个Component过滤的时候尝试用以下这种方法
+    //ComponentBitset componentBitset;
+
+    //componentBitset[GetComponentTypeID<MeshRenderer>()] = true;
+    //componentBitset[GetComponentTypeID<Transform>()] = true;
+
+    //auto b = (suzanne.componentBitset & componentBitset);
+
+    //cout << suzanne.componentBitset << endl;
+    //cout << componentBitset << endl;
+    //cout << b << endl;
+    //cout << b.any() << endl;
+    //cout << b.all() << endl;
+    //cout << b.none() << endl;
 
 
     while (!glfwWindowShouldClose(window))
