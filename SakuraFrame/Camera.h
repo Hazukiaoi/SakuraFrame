@@ -33,6 +33,8 @@ public:
 
 	float Aspect = 1.778f;
 
+	int layer = 0;
+
 	void SetMatrix()
 	{
 		WorldToViewMatrix = transform->WorldToObject;
