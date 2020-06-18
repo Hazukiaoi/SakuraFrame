@@ -146,5 +146,8 @@
     <ClInclude Include="Pipline.h">
       <Filter>头文件\Core\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>头文件\Core\Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
