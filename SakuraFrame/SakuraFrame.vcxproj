@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseDefine.h" />
+    <ClInclude Include="Bound.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="imgui\imconfig.h" />

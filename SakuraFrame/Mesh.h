@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Type.h"
+#include "Bound.h"
+
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
@@ -24,6 +26,7 @@ public:
     Vector3 normal;
     Vector4 tangent;
     Vector2 uv0, uv1;
+
 };
 
 struct Mesh
@@ -35,6 +38,8 @@ public:
     VertexData* vertices;
     unsigned int *triangles;
     unsigned int VAO, VBO, EBO;
+
+    Bound bound;
 
 public:
 
@@ -71,6 +76,8 @@ public:
 
         triangles = (unsigned int*)malloc(trianglesCount * sizeof(unsigned int));
         fs.read((char*)triangles, trianglesCount * sizeof(unsigned int));
+
+        fs.read((char*)&bound, sizeof(Bound));
 
         fs.close();
     }

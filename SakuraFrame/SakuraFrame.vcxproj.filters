@@ -149,5 +149,8 @@
     <ClInclude Include="Scene.h">
       <Filter>头文件\Core\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Bound.h">
+      <Filter>头文件\Core\Render</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

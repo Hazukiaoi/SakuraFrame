@@ -58,7 +58,6 @@ int main()
     shaderLib = make_shared<ShaderLibrary>();
     ecsManager = CreateRef<ECSManager>();
 
-
     ////实例化Shader
     //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
 
@@ -266,35 +265,31 @@ int main()
     mf->mesh->LoadMesh("Suzanne.dat");
     mf->mesh->setupMesh();
 
+    cout << "Center: " << mf->mesh->bound.center.x << "|" << mf->mesh->bound.center.y << "|" << mf->mesh->bound.center.z << endl;
+    cout << "Size: " << mf->mesh->bound.size.x << "|" << mf->mesh->bound.size.y << "|" << mf->mesh->bound.size.z << endl;
+    cout << "Min: " << mf->mesh->bound.min.x << "|" << mf->mesh->bound.min.y << "|" << mf->mesh->bound.min.z << endl;
+    cout << "Max: " << mf->mesh->bound.max.x << "|" << mf->mesh->bound.max.y << "|" << mf->mesh->bound.max.z << endl;
+
     mr->material = new Material(shaderLib->Get("SF_Unlit"));
+
+    suzanne.Destroy();
+
+    ecsManager->Refresh();
 
     Ref<Shader> shader = shaderLib->Get("SF_Unlit");
 
-    auto es = ecsManager->Filter<Light, Transform>();
+    //auto es = ecsManager->Filter<Light, Transform>();
 
 
-    cout << "Light Count:" <<  es.size() << endl;
-    for (auto& l : es)
-    {
-        cout << "Light:" << (int)l->GetComponent<Light>()->type << " | " << l->GetComponent<Light>()->intensity << endl;
-    }
+    //cout << "Light Count:" <<  es.size() << endl;
+    //for (auto& l : es)
+    //{
+    //    cout << "Light:" << (int)l->GetComponent<Light>()->type << " | " << l->GetComponent<Light>()->intensity << endl;
+    //}
+
+    getchar();
 
     return 0;
-    ////之后加上多个Component过滤的时候尝试用以下这种方法
-    //ComponentBitset componentBitset;
-
-    //componentBitset[GetComponentTypeID<MeshRenderer>()] = true;
-    //componentBitset[GetComponentTypeID<Transform>()] = true;
-
-    //auto b = (suzanne.componentBitset & componentBitset);
-
-    //cout << suzanne.componentBitset << endl;
-    //cout << componentBitset << endl;
-    //cout << b << endl;
-    //cout << b.any() << endl;
-    //cout << b.all() << endl;
-    //cout << b.none() << endl;
-
 
     while (!glfwWindowShouldClose(window))
     {
