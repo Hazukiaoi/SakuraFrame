@@ -152,5 +152,8 @@
     <ClInclude Include="Bound.h">
       <Filter>头文件\Core\Render</Filter>
     </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

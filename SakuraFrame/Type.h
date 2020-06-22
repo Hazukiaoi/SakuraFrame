@@ -17,3 +17,4 @@ typedef glm::quat Quaternion;
 typedef glm::mat4 Matrix4x4;
 
 //
+#define PI 3.14159f

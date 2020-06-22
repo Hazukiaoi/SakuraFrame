@@ -56,6 +56,7 @@ private:
 	std::vector<std::unique_ptr<Component>> components;
 
 public:
+	string name;
 	ComponentBitset componentBitset;
 	ComponentArray componentArray;
 	void Update()

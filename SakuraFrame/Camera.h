@@ -33,7 +33,7 @@ public:
 
 	float Aspect = 1.778f;
 
-	int layer = 0;
+	int Layer = 0;
 
 	void SetMatrix()
 	{
@@ -52,6 +52,27 @@ public:
 	void Update()
 	{
 		if (transform) SetMatrix();
+	}
+
+	Camera()
+	{
+		Size = 5.0f;
+		FOV = 60.0f;
+		FarPlane = 1000.0f;
+		NearPlane = 0.3f;
+		Aspect = 1.778f;
+		Layer = 0;
+	}
+
+	Camera(float size, float fov, float fPlane, float nPlane, float aspect, int layer) : 
+		Size(size), 
+		FOV(fov), 
+		FarPlane(fPlane), 
+		NearPlane(nPlane), 
+		Aspect(aspect), 
+		Layer(layer)
+	{
+
 	}
 
 	//Camera()

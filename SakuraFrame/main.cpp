@@ -32,6 +32,7 @@
 #include "Camera.h"
 #include "MeshFilter.h"
 #include "MeshRenderer.h"
+#include "Scene.h";
 
 //窗口尺寸重置的时候的回调
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -51,10 +52,14 @@ float deltaTime, lastFrame;
 Ref<ECSManager> ecsManager;
 Ref<ShaderLibrary> shaderLib;
 
-
 int main()
 {
+    Scene scene;
+    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SampleScene.SFSce");
 
+
+    getchar();
+    return 0;
     //初始化Shader库和ECS管理器
     shaderLib = make_shared<ShaderLibrary>();
     ecsManager = CreateRef<ECSManager>();
@@ -241,16 +246,16 @@ int main()
     directLight.AddComponent<Light>();
     
     Light* l = directLight.GetComponent<Light>();
-    l->type = LightType::LIGHT_DIRECTTIONAL;
-    l->intensity = 3.0f;
+    l->Type = LightType::LIGHT_DIRECTTIONAL;
+    l->Intensity = 3.0f;
 
     Entity& pointLight = ecsManager->AddEntity();
     pointLight.AddComponent<Transform>(Transform{ Vector3(0,2,0), Vector3(50,-30,0), Vector3(1,1,1) });
     pointLight.AddComponent<Light>();
 
     Light* l1 = pointLight.GetComponent<Light>();
-    l1->type = LightType::LIGHT_POINT;
-    l1->intensity = 1.0f;
+    l1->Type = LightType::LIGHT_POINT;
+    l1->Intensity = 1.0f;
 
 
     Entity& suzanne = ecsManager->AddEntity();
