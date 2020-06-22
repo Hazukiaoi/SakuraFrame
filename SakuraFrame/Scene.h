@@ -23,7 +23,10 @@ public:
 		fs.close();
 
 	}
-	~Scene(){}
+	~Scene()
+	{
+		
+	}
 
 private:
 

@@ -54,6 +54,7 @@ Ref<ShaderLibrary> shaderLib;
 
 int main()
 {
+
     //初始化Shader库和ECS管理器
     shaderLib = make_shared<ShaderLibrary>();
     ecsManager = CreateRef<ECSManager>();
@@ -287,6 +288,7 @@ int main()
     //    cout << "Light:" << (int)l->GetComponent<Light>()->type << " | " << l->GetComponent<Light>()->intensity << endl;
     //}
 
+    ecsManager->Clear();
     getchar();
 
     return 0;

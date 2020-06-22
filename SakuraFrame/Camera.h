@@ -59,4 +59,8 @@ public:
 	//	ViewToProjMatrix = glm::perspective(glm::radians(FOV), Aspect, NearPlane, FarPlane);
 	//	Inv_ViewToProjMatrix = glm::inverse(ViewToProjMatrix);
 	//}
+	~Camera()
+	{
+		cout << "Camera Destroy" << endl;
+	}
 };

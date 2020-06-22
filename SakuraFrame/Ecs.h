@@ -121,6 +121,10 @@ public:
 			std::end(entities));
 	}
 
+	void Clear()
+	{
+		entities.clear();
+	}
 
 	template<typename... Args>
 	vector<Entity*> Filter()

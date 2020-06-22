@@ -77,6 +77,7 @@ public:
         triangles = (unsigned int*)malloc(trianglesCount * sizeof(unsigned int));
         fs.read((char*)triangles, trianglesCount * sizeof(unsigned int));
 
+        //读取模型的Bound参数
         fs.read((char*)&bound, sizeof(Bound));
 
         fs.close();

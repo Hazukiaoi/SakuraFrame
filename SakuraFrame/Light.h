@@ -26,4 +26,9 @@ public:
 		type = LightType::LIGHT_DIRECTTIONAL;
 		color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
+
+	~Light()
+	{
+		cout << "Light Destroy" << endl;
+	}
 };

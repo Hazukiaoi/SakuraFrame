@@ -8,4 +8,9 @@ class MeshRenderer : public Component
 {
 public:
 	Material* material;
+
+	~MeshRenderer()
+	{
+		cout << "Mesh Renderer Destroy" << endl;
+	}
 };
