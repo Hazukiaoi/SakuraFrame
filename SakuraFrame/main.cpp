@@ -54,15 +54,17 @@ Ref<ShaderLibrary> shaderLib;
 
 int main()
 {
+    //初始化Shader库和ECS管理器
+    shaderLib = make_shared<ShaderLibrary>();
+    ecsManager = CreateRef<ECSManager>();
+
+
     Scene scene;
-    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SampleScene.SFSce");
+    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF", *ecsManager);
 
 
     getchar();
     return 0;
-    //初始化Shader库和ECS管理器
-    shaderLib = make_shared<ShaderLibrary>();
-    ecsManager = CreateRef<ECSManager>();
 
     ////实例化Shader
     //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");

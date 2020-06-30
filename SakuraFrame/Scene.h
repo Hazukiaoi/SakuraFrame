@@ -7,13 +7,18 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <algorithm>
+#include <utility>
+
 
 using json = nlohmann::json;
 using namespace std;
 
-typedef void (*SceneAddComponentFunc)(Entity& entity, json& jsonData);
+class Scene;
 
-static void scene_AddComponent_Transform(Entity& e, json& j)
+typedef void (*SceneAddComponentFunc)(Entity& entity, json& jsonData, Scene& scene);
+
+static void scene_AddComponent_Transform(Entity& e, json& j, Scene& scene)
 {
 	cout << "AddComponent: " << j["ComponentName"] << endl;
 
@@ -21,10 +26,21 @@ static void scene_AddComponent_Transform(Entity& e, json& j)
 	Quaternion	rot(j["Rotation"]["X"], j["Rotation"]["Y"], j["Rotation"]["Z"],  j["Rotation"]["W"]);
 	Vector3		scale(j["Scale"]["X"],  j["Scale"]["Y"],    j["Scale"]["Z"]);
 
-	e.AddComponent<Transform>(Transform{ pos, rot, scale });
+	//em.FindEntity<int>([](Entity* ent, int id) {return (ent->instanceID == id); }, 123);
+	auto& t = e.AddComponent<Transform>(Transform{ pos, rot, scale });
+
+	//如果有父对象则设置父对象
+	string		parent = j["Parent"];
+	if (parent != "NULL")
+	{
+		int id = stoi(parent);
+		auto fe = find_if(scene.ecsManager->entities.begin(), scene.ecsManager->entities.end(), [&](std::unique_ptr<Entity>& e) {return e->instanceID == id; });
+		if(fe != scene.ecsManager->entities.end())
+			t.parent = fe->get()->GetComponent<Transform>();
+	}	
 }
 
-static void scene_AddComponent_Camera(Entity& e, json& j)
+static void scene_AddComponent_Camera(Entity& e, json& j, Scene& scene)
 {
 	cout << "AddComponent: " << j["ComponentName"] << endl;
 
@@ -40,25 +56,60 @@ static void scene_AddComponent_Camera(Entity& e, json& j)
 				j["Layer"]
 			}
 		);
-
-
 }
 
-static void scene_AddComponent_Light(Entity& e, json& j)
+static void scene_AddComponent_Light(Entity& e, json& j, Scene& scene)
 {
-	cout << "Light" << " | " << j["Intensity"] << " | " << j["Color"]["G"] << endl;
+	Color c;
+	c.r = j["Color"]["R"];
+	c.g = j["Color"]["G"];
+	c.b = j["Color"]["B"];
+	c.a = j["Color"]["A"];
+	e.AddComponent<Light>
+		(
+			Light
+			{
+				j["Intensity"],
+				j["Range"],
+				(int)j["LightType"],
+				Color(j["Color"]["R"], j["Color"]["G"], j["Color"]["B"],j["Color"]["A"])
+			}
+		);
+	//cout << "Light" << " | " << j["Intensity"] << " | " << j["Color"]["G"] << endl;
 }
 
-static void scene_AddComponent_MeshFilter(Entity& e, json& j)
+static void scene_AddComponent_MeshFilter(Entity& e, json& j, Scene& scene)
 {
+	//加载的时候从列表进行索引，如果网格未被初始化，就从字段中加载网格
+	int meshID = j["Name"];
+	//如果网格本身不存在，则创建新的网格
+	if (scene.meshs.count(meshID) == 0)
+	{
+		Mesh* m = new Mesh();
+		ostringstream oss;
+		oss << scene.assetPath << scene.assetInfo[meshID];
+		m->LoadMesh(oss.str().c_str());
+		scene.meshs.emplace(meshID, m);
+	}
+
+	auto& m = e.AddComponent<MeshFilter>();
+	m.mesh = scene.meshs[meshID];
+
 	cout << j["ComponentName"] << endl;
-
 }
 
-static void scene_AddComponent_MeshRenderer(Entity& e, json& j)
+static void scene_AddComponent_MeshRenderer(Entity& e, json& j, Scene& scene)
 {
-	cout << j["ComponentName"] << endl;
+	//创建加载材质和加载贴图
+	int matID = j["Name"];
 
+	if (scene.meshs.count(matID) == 0)
+	{
+		Material* m = new Material();
+	}
+
+
+	cout << j["ComponentName"] << endl;
 }
 
 static map<string, SceneAddComponentFunc> AddComponent;
@@ -66,11 +117,16 @@ static map<string, SceneAddComponentFunc> AddComponent;
 
 class Scene
 {
-	ECSManager *ecsManager;
-	
 public:
+	ECSManager *ecsManager;
+	map<int, Mesh*> meshs;
+	map<int, Texture*> textures;
+	map<int, Material*> materials;
 	
+	map<int, string> assetInfo;
 
+	string assetPath;
+	
 	void InitAddComponentMap()
 	{
 		AddComponent["Transform"] = scene_AddComponent_Transform;
@@ -86,10 +142,34 @@ public:
 		InitAddComponentMap();
 	}
 
-	void LoadScene(const char* path)
+	void LoadAssetsInfo(string asInfoName)
 	{
+		ifstream assetJson;
+		ostringstream m_path;
+		m_path << assetPath << asInfoName;
+		assetJson.open(m_path.str());
+		assert(assetJson.is_open());
+		string s;
+		while (getline(assetJson, s)) {}
+		assetJson.close();
+
+		auto o = json::parse(s);
+		for (auto& obj : o)
+		{
+			assetInfo.emplace(obj["Name"], obj["Path"]);
+		}
+	}
+
+	void LoadScene(string path, string sceneName, string assetInfoName)
+	{
+		assetPath = path;
+
+		LoadAssetsInfo(assetInfoName);
+
         ifstream sceneJson;
-		sceneJson.open(path);
+		ostringstream m_path;
+		m_path << path << sceneName;
+		sceneJson.open(m_path.str());
         assert(sceneJson.is_open());
         string s;
         while (getline(sceneJson, s)) {}
@@ -104,7 +184,7 @@ public:
 			cout << "New Entity: " << entity.name << endl;
 			for (auto& c : obj["Components"])
 			{
-				AddComponent[c["ComponentName"]](entity, c);
+				AddComponent[c["ComponentName"]](entity, c, *this);
 			}
         }
 	}

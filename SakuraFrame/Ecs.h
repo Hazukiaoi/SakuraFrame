@@ -57,6 +57,7 @@ private:
 
 public:
 	string name;
+	int instanceID;
 	ComponentBitset componentBitset;
 	ComponentArray componentArray;
 	void Update()
@@ -97,7 +98,6 @@ public:
 class ECSManager
 {
 private:
-	std::vector<std::unique_ptr<Entity>> entities;
 
 	template<typename T>
 	void BitsetCheck(ComponentBitset& bs)
@@ -106,6 +106,7 @@ private:
 	}
 
 public:
+	std::vector<std::unique_ptr<Entity>> entities;
 	void Update()
 	{
 		for (auto& e : entities) e->Update();
@@ -148,4 +149,16 @@ public:
 		entities.emplace_back(std::move(uPtr));
 		return *e;
 	}
+
+	//template<typename T>
+	//using FindEnt = bool(*)(Entity*, T);
+
+	//template<typename T>
+	//Entity& FindEntity(FindEnt<T> ft, T t)
+	//{
+	//	for (auto& e : entities)
+	//	{
+	//		if (ft(e.get(), t)) return *e.get();
+	//	}
+	//}
 };

@@ -29,6 +29,8 @@ public:
 
 	Quaternion Rotation;
 
+	Transform *parent = nullptr;
+
 	Transform()
 	{
 		ObjectToWorld = glm::mat4(1.0f);
