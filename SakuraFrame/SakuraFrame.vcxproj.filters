@@ -40,6 +40,9 @@
     <Filter Include="源文件\ShaderSrc">
       <UniqueIdentifier>{8d5262b6-9e85-49e1-8e80-4ae7a076809a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Core\Game">
+      <UniqueIdentifier>{dd5eeb2c-8b3c-43f0-9fac-c08eccaeadb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,6 +67,9 @@
       <Filter>源文件\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>源文件\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
       <Filter>源文件\Core</Filter>
     </ClCompile>
   </ItemGroup>

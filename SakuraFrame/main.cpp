@@ -59,8 +59,8 @@ int main()
     ecsManager = CreateRef<ECSManager>();
 
 
-    Scene scene;
-    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF", *ecsManager);
+    //Scene scene;
+    //scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
 
 
     getchar();
