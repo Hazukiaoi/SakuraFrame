@@ -3,13 +3,16 @@
 #include "ECS.h"
 #include "Mesh.h"
 
-class MeshFilter : public Component
+namespace Render
 {
-public:
-	Mesh* mesh;
-
-	~MeshFilter()
+	class MeshFilter : public Component
 	{
-		cout << "Mesh Filter Destroy" << endl;
-	}
-};
+	public:
+		Mesh* mesh;
+
+		~MeshFilter()
+		{
+			cout << "Mesh Filter Destroy" << endl;
+		}
+	};
+}

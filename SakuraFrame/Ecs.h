@@ -56,7 +56,7 @@ private:
 	std::vector<std::unique_ptr<Component>> components;
 
 public:
-	string name;
+	std::string name;
 	int instanceID;
 	ComponentBitset componentBitset;
 	ComponentArray componentArray;
@@ -129,12 +129,12 @@ public:
 	}
 
 	template<typename... Args>
-	vector<Entity*> Filter()
+	std::vector<Entity*> Filter()
 	{
 		ComponentBitset _bs;		
 		int _i[] = {(BitsetCheck<Args>(_bs), 0)...};
 
-		vector<Entity*> res;
+		std::vector<Entity*> res;
 		for (auto& e : entities)
 		{
 			if (_bs == e->componentBitset) res.emplace_back(e.get());

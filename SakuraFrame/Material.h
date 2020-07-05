@@ -5,88 +5,55 @@
 #include <map>
 #include "Type.h"
 #include "Texture.h"
-//#include "Scene.h"
+#include "json.hpp"
 
-class MaterialBoard
+namespace GameCore
 {
-	map<string, float> fValues;
-	map<string, Texture*> tValues;
-	map<string, Vector4> vValues;
-};
-
-class Material
-{
-public:
-	Shader* mShader;
-	MaterialBoard* mMaterialBoard;
-	int textureActive = 0;
-
-	Material();
-	Material(Ref<Shader> shader);
-	~Material();
-
-	//void LoadMaterialFromeJson(string path, Scene& scene)
-	//{
-
-	//}
-
-//参数设置
-	void SetTexture(const std::string& name, Texture t);
-	void SetInt(const std::string& name, int i);
-	void SetFloat(const std::string& name, float f);
-	void SetVector3(const std::string& name, Vector3 vec3);
-	void SetColor(const std::string& name, Color col);
-	void SetBool(const std::string& name, bool b);
-	void SetMatrix4x4(const std::string& name, glm::mat4 mat4);
-};
-
-Material::Material()
-{
-	mShader = nullptr;
+	class Scene;
 }
 
-Material::Material(Ref<Shader> shader)
+namespace Render
 {
-	mShader = shader.get();
-}
 
-Material::~Material()
-{
-	mShader = nullptr;
-}
+	class MaterialBoard
+	{
+	public:
+		std::map<std::string, float> fValues;
+		std::map<std::string, Texture*> tValues;
+		std::map<std::string, Vector4> vValues;
+	};
+
+	using MaterialJsonDataParse = void(*)(GameCore::Scene& scene, Render::MaterialBoard& mb, const std::string propName, const nlohmann::json& jsonData);
+	class Material
+	{
+	public:
+		Shader* mShader;
+		MaterialBoard* mMaterialBoard;
+		std::string mName;
+		int textureActive = 0;
+		static std::map<std::string, MaterialJsonDataParse> MaterialParse;
 
 
-void Material::SetTexture(const std::string& name, Texture t)
-{
-	mShader->SetTexture(name.c_str(), t);
-}
+		static void matJsonParseFloat(GameCore::Scene& scene, Render::MaterialBoard& mb, const std::string propName, const nlohmann::json& jsonData);
+		static void matJsonParseVector(GameCore::Scene& scene, Render::MaterialBoard& mb, const std::string propName, const nlohmann::json& jsonData);
+		static void matJsonParseTexture(GameCore::Scene& scene, Render::MaterialBoard& mb, const std::string propName, const nlohmann::json& jsonData);
+		static void MaterialParseInit();
 
-void Material::SetInt(const std::string& name, int i)
-{
-	mShader->SetInt(name.c_str(), i);
-}
+		Material();
+		Material(Ref<Shader> shader);
+		~Material();
+		
+		void LoadMaterialFromeJson(const std::string path, GameCore::Scene* scene);
 
-void Material::SetFloat(const std::string& name, float f)
-{
-	mShader->SetFloat(name.c_str(), f);
-}
+		//参数设置
+		void SetTexture(const std::string& name, Texture t);
+		void SetInt(const std::string& name, int i);
+		void SetFloat(const std::string& name, float f);
+		void SetVector3(const std::string& name, Vector3 vec3);
+		void SetColor(const std::string& name, Color col);
+		void SetBool(const std::string& name, bool b);
+		void SetMatrix4x4(const std::string& name, glm::mat4 mat4);
+	};
 
-void Material::SetVector3(const std::string& name, Vector3 vec3)
-{
-	mShader->SetVector3(name.c_str(), vec3);
-}
 
-void Material::SetColor(const std::string& name, Color col)
-{
-	mShader->SetColor(name.c_str(), col);
-}
-
-void Material::SetBool(const std::string& name, bool b)
-{
-	mShader->SetBool(name.c_str(), b);
-}
-
-void Material::SetMatrix4x4(const std::string& name, glm::mat4 mat4)
-{
-	mShader->SetMatrix4x4(name.c_str(), mat4);
 }

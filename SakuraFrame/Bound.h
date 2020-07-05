@@ -2,10 +2,13 @@
 
 #include "MathLib.h"
 
-struct Bound
+namespace Render
 {
-public:
-	Vector3 center;
-	Vector3 size;
-	Vector3 min, max;
-};
+	struct Bound
+	{
+	public:
+		Vector3 center;
+		Vector3 size;
+		Vector3 min, max;
+	};
+}

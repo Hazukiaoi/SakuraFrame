@@ -31,9 +31,6 @@
     <Filter Include="源文件\Core">
       <UniqueIdentifier>{dd67107f-f981-445b-905a-6d48d628afba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Core\ECS">
-      <UniqueIdentifier>{3a5c45da-18e4-4a55-a897-a6706753eb4c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Core\Game">
       <UniqueIdentifier>{bf835e93-a5f4-4b95-bd33-9e5ba314ed9d}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,12 @@
     </Filter>
     <Filter Include="源文件\Core\Game">
       <UniqueIdentifier>{dd5eeb2c-8b3c-43f0-9fac-c08eccaeadb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Core\Render">
+      <UniqueIdentifier>{532ccea9-6dce-4d8e-8ca5-724808f7a68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Core\ECS">
+      <UniqueIdentifier>{3a5c45da-18e4-4a55-a897-a6706753eb4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +74,15 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>源文件\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>源文件\Core\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>源文件\Core\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>源文件\Core\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +152,6 @@
     <ClInclude Include="Transform.h">
       <Filter>头文件\Core\Game</Filter>
     </ClInclude>
-    <ClInclude Include="ECS.h">
-      <Filter>头文件\Core\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="MeshRenderer.h">
       <Filter>头文件\Core\Render</Filter>
     </ClInclude>
@@ -160,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="json.hpp">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.h">
+      <Filter>头文件\Core\ECS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

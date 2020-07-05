@@ -6,21 +6,23 @@
 //对场景MeshRenderer基于摄像机Z深度排序
 //根据Bound进行视锥剔除
 //逐个渲染
-
-class Pipline
+namespace Render
 {
-public:
-	Pipline();
-	~Pipline();
+	class Pipline
+	{
+	public:
+		Pipline();
+		~Pipline();
 
-private:
+	private:
 
-};
+	};
 
-Pipline::Pipline()
-{
-}
+	Pipline::Pipline()
+	{
+	}
 
-Pipline::~Pipline()
-{
+	Pipline::~Pipline()
+	{
+	}
 }

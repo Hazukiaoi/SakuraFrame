@@ -4,13 +4,16 @@
 #include "Mesh.h"
 #include "Material.h"
 
-class MeshRenderer : public Component
+namespace Render
 {
-public:
-	Material* material;
-
-	~MeshRenderer()
+	class MeshRenderer : public Component
 	{
-		cout << "Mesh Renderer Destroy" << endl;
-	}
-};
+	public:
+		Material* material;
+
+		~MeshRenderer()
+		{
+			cout << "Mesh Renderer Destroy" << endl;
+		}
+	};
+}

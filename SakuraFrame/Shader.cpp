@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+using Render::Shader;
+
 Shader::Shader(const GLchar* vertPath, const GLchar* fragPath, const char* shaderName) : mShaderName(shaderName)
 {
     //------------------读取Shader文件
@@ -126,7 +128,7 @@ void Shader::SetMatrix4x4(const GLchar* name, Matrix4x4 value) const
         glm::value_ptr(value));             //因为glm存的数据本身不是shader需要的，所以先用value_ptr转换
 }
 
-
+using Render::ShaderLibrary;
 Ref<Shader> ShaderLibrary::Create(const std::string& name, const std::string& vertSrc, const std::string& fragSrc)
 {
     if (m_Shaders.find(name) == m_Shaders.end())

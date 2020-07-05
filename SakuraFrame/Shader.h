@@ -14,43 +14,45 @@
 #include "Texture.h"
 #include "BaseDefine.h"
 
-
-class Shader
+namespace Render
 {
-public:
-    unsigned int ID;
-    const char* mShaderName;
+    class Shader
+    {
+    public:
+        unsigned int ID;
+        const char* mShaderName;
 
-    Shader(const GLchar* vertPath, const GLchar* fragPath, const char* shaderName);
+        Shader(const GLchar* vertPath, const GLchar* fragPath, const char* shaderName);
 
-    void use();
-
-
-    void SetFloat(const GLchar* name, float value) const;
-
-    void SetBool(const GLchar* name, bool value) const;
-
-    void SetColor(const GLchar* name, glm::vec4& value) const;
-
-    void SetVector3(const GLchar* name, glm::vec3& value) const;
-
-    void SetInt(const GLchar* name, int value) const;
-
-    void SetTexture(const GLchar* name, Texture& value) const;
-
-    void SetMatrix4x4(const GLchar* name, Matrix4x4 value) const;
-
-};
+        void use();
 
 
-class ShaderLibrary
-{
-public:
+        void SetFloat(const GLchar* name, float value) const;
 
-    Ref<Shader> Create(const std::string& name, const std::string& vertSrc, const std::string& fragSrc);
+        void SetBool(const GLchar* name, bool value) const;
 
-    Ref<Shader> Get(const std::string& name);
+        void SetColor(const GLchar* name, glm::vec4& value) const;
 
-private:
-    std::unordered_map<std::string, Ref<Shader>> m_Shaders;
-};
+        void SetVector3(const GLchar* name, glm::vec3& value) const;
+
+        void SetInt(const GLchar* name, int value) const;
+
+        void SetTexture(const GLchar* name, Texture& value) const;
+
+        void SetMatrix4x4(const GLchar* name, Matrix4x4 value) const;
+
+    };
+
+
+    class ShaderLibrary
+    {
+    public:
+
+        Ref<Shader> Create(const std::string& name, const std::string& vertSrc, const std::string& fragSrc);
+
+        Ref<Shader> Get(const std::string& name);
+
+    private:
+        std::unordered_map<std::string, Ref<Shader>> m_Shaders;
+    };
+}

@@ -48,23 +48,17 @@ void InitImGUI(GLFWwindow* window, const char* glsl_version);
 
 float deltaTime, lastFrame;
 
+using namespace Render;
 
 Ref<ECSManager> ecsManager;
-Ref<ShaderLibrary> shaderLib;
+Ref<Render::ShaderLibrary> shaderLib;
 
 int main()
 {
+    Render::Material::MaterialParseInit();
     //初始化Shader库和ECS管理器
-    shaderLib = make_shared<ShaderLibrary>();
-    ecsManager = CreateRef<ECSManager>();
-
-
-    //Scene scene;
-    //scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
-
-
-    getchar();
-    return 0;
+    shaderLib = make_shared<Render::ShaderLibrary>();
+    //ecsManager = CreateRef<ECSManager>();
 
     ////实例化Shader
     //Shader mUnlit = Shader("ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag", "SF_Unlit");
@@ -155,6 +149,15 @@ int main()
     Vector4 clear_color = Vector4{ 0.1f, 0.7f, 0.9f, 1 };
     glEnable(GL_DEPTH_TEST);
 
+    //测试初始化场景
+    GameCore::Scene scene;
+    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
+
+
+    getchar();
+    return 0;
+
+
     ////测试贴图显示
     //GLuint tex;
     //glGenTextures(1, &tex);
@@ -190,11 +193,10 @@ int main()
 
     //free(img);
 
-    //Tex2D 贴图加载显示测试
-    Texture2D tex2D = Texture2D("Save.dat");
-    tex2D.SetUp();
-    tex2D.Release();
-
+    ////Tex2D 贴图加载显示测试
+    //Render::Texture2D tex2D = Render::Texture2D("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/Textures/13640.dat");
+    //tex2D.SetUp();
+    //tex2D.Release();
 
 
     ////创建贴图
@@ -219,86 +221,96 @@ int main()
     ////    cout << mesh->vertices[i].vertex.x << "|" << mesh->vertices[i].vertex.y << "|" << mesh->vertices[i].vertex.z << "|" << endl;
     ////}
 
-    Matrix4x4 localToWorld = Matrix4x4(1.0);
-    localToWorld = glm::translate(localToWorld, Vector3(0, 0, -5));
-
-    glm::mat4 view;
-    //view = glm::lookAt( glm::vec3(0.0f, 0.0f, -10.0f),
-    //                    glm::vec3(0.0f, 0.0f, 0.0f),
-    //                    glm::vec3(0.0f, 1.0f, 0.0f));
-    view[0] = Vector4(1.0f, 0.0f, 0.0f, 0.0f);
-    view[1] = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
-    view[2] = Vector4(0.0f, 0.0f, 1.0f, 0.0f);
-    view[3] = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-
-    glm::mat4 proj = glm::perspective(glm::radians(35.0f), float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
-
-    //创建Shader
-    //shaderLib->Create("SF_Unlit", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.vert", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.frag");
-    shaderLib->Create("SF_Unlit", "ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag");
-
-    //创建ECS示范
-    Entity& camera = ecsManager->AddEntity();
-    Transform t{ Vector3(0,0,0), Vector3(0,0,0), Vector3(1,1,1) };
-    camera.AddComponent<Transform>(t);
-    camera.AddComponent<Camera>();
-
-    Entity& directLight = ecsManager->AddEntity();
-    directLight.AddComponent<Transform>(Transform{ Vector3(0,0,0), Vector3(50,-30,0), Vector3(1,1,1) });
-    directLight.AddComponent<Light>();
-    
-    Light* l = directLight.GetComponent<Light>();
-    l->Type = LightType::LIGHT_DIRECTTIONAL;
-    l->Intensity = 3.0f;
-
-    Entity& pointLight = ecsManager->AddEntity();
-    pointLight.AddComponent<Transform>(Transform{ Vector3(0,2,0), Vector3(50,-30,0), Vector3(1,1,1) });
-    pointLight.AddComponent<Light>();
-
-    Light* l1 = pointLight.GetComponent<Light>();
-    l1->Type = LightType::LIGHT_POINT;
-    l1->Intensity = 1.0f;
 
 
-    Entity& suzanne = ecsManager->AddEntity();
-    suzanne.AddComponent<Transform>(Transform { Vector3(0,0,-3), Vector3(0,0,0), Vector3(1,1,1) });
-    suzanne.AddComponent<MeshFilter>();
-    suzanne.AddComponent<MeshRenderer>();
-
-    MeshFilter* mf = suzanne.GetComponent<MeshFilter>();
-    MeshRenderer* mr = suzanne.GetComponent<MeshRenderer>();
 
 
-    mf->mesh = new Mesh();
-    mf->mesh->LoadMesh("Suzanne.dat");
-    mf->mesh->setupMesh();
+    //Matrix4x4 localToWorld = Matrix4x4(1.0);
+    //localToWorld = glm::translate(localToWorld, Vector3(0, 0, -5));
 
-    cout << "Center: " << mf->mesh->bound.center.x << "|" << mf->mesh->bound.center.y << "|" << mf->mesh->bound.center.z << endl;
-    cout << "Size: " << mf->mesh->bound.size.x << "|" << mf->mesh->bound.size.y << "|" << mf->mesh->bound.size.z << endl;
-    cout << "Min: " << mf->mesh->bound.min.x << "|" << mf->mesh->bound.min.y << "|" << mf->mesh->bound.min.z << endl;
-    cout << "Max: " << mf->mesh->bound.max.x << "|" << mf->mesh->bound.max.y << "|" << mf->mesh->bound.max.z << endl;
+    //glm::mat4 view;
+    ////view = glm::lookAt( glm::vec3(0.0f, 0.0f, -10.0f),
+    ////                    glm::vec3(0.0f, 0.0f, 0.0f),
+    ////                    glm::vec3(0.0f, 1.0f, 0.0f));
+    //view[0] = Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+    //view[1] = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+    //view[2] = Vector4(0.0f, 0.0f, 1.0f, 0.0f);
+    //view[3] = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
-    mr->material = new Material(shaderLib->Get("SF_Unlit"));
+    //glm::mat4 proj = glm::perspective(glm::radians(35.0f), float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
 
-    suzanne.Destroy();
+    ////创建Shader
+    ////shaderLib->Create("SF_Unlit", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.vert", "F:/SakuraFrame/SakuraFrame/x64/Debug/ShaderSrc/Unlit.frag");
+    //shaderLib->Create("SF_Unlit", "ShaderSrc/Unlit.vert", "ShaderSrc/Unlit.frag");
 
-    ecsManager->Refresh();
+    ////创建ECS示范
+    //Entity& camera = ecsManager->AddEntity();
+    //GameCore::Transform t{ Vector3(0,0,0), Vector3(0,0,0), Vector3(1,1,1) };
+    //camera.AddComponent<GameCore::Transform>(t);
+    //camera.AddComponent<Camera>();
 
-    Ref<Shader> shader = shaderLib->Get("SF_Unlit");
+    //Entity& directLight = ecsManager->AddEntity();
+    //directLight.AddComponent<GameCore::Transform>(GameCore::Transform{ Vector3(0,0,0), Vector3(50,-30,0), Vector3(1,1,1) });
+    //directLight.AddComponent<Light>();
+    //
+    //Light* l = directLight.GetComponent<Light>();
+    //l->Type = LightType::LIGHT_DIRECTTIONAL;
+    //l->Intensity = 3.0f;
+
+    //Entity& pointLight = ecsManager->AddEntity();
+    //pointLight.AddComponent<GameCore::Transform>(GameCore::Transform{ Vector3(0,2,0), Vector3(50,-30,0), Vector3(1,1,1) });
+    //pointLight.AddComponent<Light>();
+
+    //Light* l1 = pointLight.GetComponent<Light>();
+    //l1->Type = LightType::LIGHT_POINT;
+    //l1->Intensity = 1.0f;
+
+
+    //Entity& suzanne = ecsManager->AddEntity();
+    //suzanne.AddComponent<GameCore::Transform>(GameCore::Transform { Vector3(0,0,-3), Vector3(0,0,0), Vector3(1,1,1) });
+    //suzanne.AddComponent<MeshFilter>();
+    //suzanne.AddComponent<MeshRenderer>();
+
+    //MeshFilter* mf = suzanne.GetComponent<MeshFilter>();
+    //MeshRenderer* mr = suzanne.GetComponent<MeshRenderer>();
+
+
+    //mf->mesh = new Mesh();
+    //mf->mesh->LoadMesh("Suzanne.dat");
+    //mf->mesh->setupMesh();
+
+    //cout << "Center: " << mf->mesh->bound.center.x << "|" << mf->mesh->bound.center.y << "|" << mf->mesh->bound.center.z << endl;
+    //cout << "Size: " << mf->mesh->bound.size.x << "|" << mf->mesh->bound.size.y << "|" << mf->mesh->bound.size.z << endl;
+    //cout << "Min: " << mf->mesh->bound.min.x << "|" << mf->mesh->bound.min.y << "|" << mf->mesh->bound.min.z << endl;
+    //cout << "Max: " << mf->mesh->bound.max.x << "|" << mf->mesh->bound.max.y << "|" << mf->mesh->bound.max.z << endl;
+
+    //mr->material = new Material(shaderLib->Get("SF_Unlit"));
+
+    //suzanne.Destroy();
+
+    //ecsManager->Refresh();
+
+    //Ref<Shader> shader = shaderLib->Get("SF_Unlit");
+
+
+
+
+
+
 
     //auto es = ecsManager->Filter<Light, Transform>();
-
-
     //cout << "Light Count:" <<  es.size() << endl;
     //for (auto& l : es)
     //{
     //    cout << "Light:" << (int)l->GetComponent<Light>()->type << " | " << l->GetComponent<Light>()->intensity << endl;
     //}
 
-    ecsManager->Clear();
-    getchar();
 
-    return 0;
+
+    //ecsManager->Clear();
+    //getchar();
+
+    //return 0;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -320,36 +332,36 @@ int main()
 
 
 
-        //{
-        //    static float f = 0.0f;
-        //    static int counter = 0;
+        {
+            static float f = 0.0f;
+            static int counter = 0;
 
-        //    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-        //    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        //    //ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        //    //ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+            //ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+            //ImGui::Checkbox("Another Window", &show_another_window);
 
-        //    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        //    //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-        //    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-        //        counter++;
-        //    ImGui::SameLine();
-        //    ImGui::Text("counter = %d", counter);
+            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
 
-        //    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        //    ImGui::End();
-        //}
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
 
-        //{
-        //    ImGui::SetNextWindowPos({ 0, 20 }, ImGuiCond_Always);
-        //    ImGui::SetNextWindowSize({ 150, 130 }, ImGuiCond_Always);
-        //    ImGui::Begin("New Frame");
-        //    ImGui::Text("This is some useful text.");
-        //    ImGui::Button("Just A Btn", { 120, 30 });
-        //    ImGui::End();
-        //}
+        {
+            ImGui::SetNextWindowPos({ 0, 20 }, ImGuiCond_Always);
+            ImGui::SetNextWindowSize({ 150, 130 }, ImGuiCond_Always);
+            ImGui::Begin("New Frame");
+            ImGui::Text("This is some useful text.");
+            ImGui::Button("Just A Btn", { 120, 30 });
+            ImGui::End();
+        }
 
         ImGui::Render();
 
@@ -359,17 +371,18 @@ int main()
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Draw Mesh
 
-        shader->use();
-        shader->SetMatrix4x4("sf_mat_model", localToWorld);
-        shader->SetMatrix4x4("sf_mat_view", view);
-        shader->SetMatrix4x4("sf_mat_projection", proj);
+        ////Draw Mesh
 
-        glBindVertexArray(mf->mesh->VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mf->mesh->EBO);
+        //shader->use();
+        //shader->SetMatrix4x4("sf_mat_model", localToWorld);
+        //shader->SetMatrix4x4("sf_mat_view", view);
+        //shader->SetMatrix4x4("sf_mat_projection", proj);
 
-        glDrawElements(GL_TRIANGLES, mf->mesh->trianglesCount, GL_UNSIGNED_INT, 0);
+        //glBindVertexArray(mf->mesh->VAO);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mf->mesh->EBO);
+
+        //glDrawElements(GL_TRIANGLES, mf->mesh->trianglesCount, GL_UNSIGNED_INT, 0);
 
 
         //Draw ImGUI
