@@ -151,16 +151,23 @@ int main()
 
     //测试初始化场景
     GameCore::Scene scene;
-    scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
+    scene.LoadScene("D:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
 
     cout << "-------" << endl;
+
+    cout << scene.ecsManager->entities.size() << endl;
 
     for (auto& e : scene.ecsManager->entities)
     {
         cout << e->name << " | "  << endl;
         for (auto& c : e->componentArray)
         {
-            cout << "\t" << c->ComponentName() << endl;
+            if (c != nullptr)
+            {
+                //cout << "\t" << typeid(*c).name() << endl;//利用RTTI信息机制，父类一定至少要有一个虚函数
+                cout << "\t" << c->ComponentName() << endl;
+
+            }
         }
 
     }

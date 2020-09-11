@@ -8,8 +8,9 @@ namespace Render
 	class MeshFilter : public Component
 	{
 	public:
+		DEF_COMPONENT(MESH_FILTER)
+
 		Mesh* mesh;
-		static std::string ComponentName() { return "MESH_FILTER"; };
 
 		~MeshFilter()
 		{

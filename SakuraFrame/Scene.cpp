@@ -155,8 +155,12 @@ void  Scene::scene_AddComponent_MeshRenderer(Entity& e, json& j, Scene& scene)
 	if (scene.materials.count(matID) == 0)
 	{
 		Render::Material* m = new Render::Material();
-		m->LoadMaterialFromeJson(scene.assetInfo[matID], &scene);
+		m->LoadMaterialFromeJson(scene.assetInfo[matID], &scene);	
 	}
+
+	auto& mr = e.AddComponent<Render::MeshRenderer>();
+	mr.material = scene.materials[matID];
+
 	cout << j["ComponentName"] << endl;
 }
 //}

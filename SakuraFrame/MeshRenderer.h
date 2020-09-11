@@ -9,8 +9,9 @@ namespace Render
 	class MeshRenderer : public Component
 	{
 	public:
+		DEF_COMPONENT(MESH_RENDERER)
+
 		Material* material;
-		static std::string ComponentName() { return "MESH_RENDERER"; };
 
 		~MeshRenderer()
 		{

@@ -17,11 +17,12 @@ namespace Render
 	{
 
 	public:
+		DEF_COMPONENT(LIGHT)
+
 		float Intensity;
 		float Range;
 		LightType Type;
 		Color LightColor;
-		static std::string ComponentName() { return "LIGHT"; };
 
 		Light()
 		{

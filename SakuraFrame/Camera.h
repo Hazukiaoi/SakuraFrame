@@ -17,6 +17,7 @@ namespace Render
 	private:
 		GameCore::Transform* transform;
 	public:
+		DEF_COMPONENT(CAMERA)
 		
 		Matrix4x4 WorldToViewMatrix;
 		Matrix4x4 ViewToProjMatrix;
@@ -57,7 +58,6 @@ namespace Render
 			if (transform) SetMatrix();
 		}
 
-		static std::string ComponentName() { return "CAMERA";  };
 
 		Camera()
 		{

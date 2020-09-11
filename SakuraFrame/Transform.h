@@ -15,6 +15,7 @@ namespace GameCore {
 	class Transform : public Component
 	{
 	public:
+		DEF_COMPONENT(TRANSFORM)
 
 		Vector3 Right = Vector3(1, 0, 0);
 		Vector3 Up = Vector3(0, 1, 0);
@@ -36,6 +37,5 @@ namespace GameCore {
 		Transform(Vector3 pos, Quaternion rotation, Vector3 scale);
 		Transform(Vector3 pos, Vector3 euler, Vector3 scale);
 
-		static std::string ComponentName() { return "TRANSFORM"; };
 	};
 }

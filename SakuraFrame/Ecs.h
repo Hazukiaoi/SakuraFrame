@@ -7,6 +7,8 @@
 #include <bitset>
 #include <array>
 
+#define DEF_COMPONENT(className) virtual const char* ComponentName() { return #className; };
+
 enum class COMPONENT_FILTER_TYPE
 {
 	ALL,
@@ -36,13 +38,11 @@ constexpr std::size_t maxComponent = 32;
 using ComponentBitset = std::bitset<maxComponent>;
 using ComponentArray = std::array<Component*, maxComponent>	;
 
-
 class Component
 {
 public:
+	DEF_COMPONENT(BASE);
 	Entity* entity;
-
-	static std::string ComponentName() { return ""; };
 
 	virtual void Init() {};
 	virtual void Update() {};
