@@ -35,5 +35,7 @@ namespace GameCore {
 		Transform();
 		Transform(Vector3 pos, Quaternion rotation, Vector3 scale);
 		Transform(Vector3 pos, Vector3 euler, Vector3 scale);
+
+		static std::string ComponentName() { return "TRANSFORM"; };
 	};
 }

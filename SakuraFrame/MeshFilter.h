@@ -9,6 +9,7 @@ namespace Render
 	{
 	public:
 		Mesh* mesh;
+		static std::string ComponentName() { return "MESH_FILTER"; };
 
 		~MeshFilter()
 		{

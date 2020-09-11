@@ -42,6 +42,8 @@ class Component
 public:
 	Entity* entity;
 
+	static std::string ComponentName() { return ""; };
+
 	virtual void Init() {};
 	virtual void Update() {};
 

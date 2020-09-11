@@ -10,6 +10,7 @@ namespace Render
 	{
 	public:
 		Material* material;
+		static std::string ComponentName() { return "MESH_RENDERER"; };
 
 		~MeshRenderer()
 		{

@@ -9,6 +9,7 @@ Scene::Scene()
 	InitAddComponentMap();
 }
 
+//解析资源路径，吧对应的资源ID和路径索引填入assetInfo
 void Scene::LoadAssetsInfo(const std::string& asInfoName)
 {
 	ifstream assetJson;
@@ -33,6 +34,7 @@ void Scene::LoadScene(const std::string& path, const std::string& sceneName, con
 
 	LoadAssetsInfo(assetInfoName);
 
+	//读取场景布局Json
 	ifstream sceneJson;
 	ostringstream m_path;
 	m_path << path << sceneName;
@@ -43,7 +45,7 @@ void Scene::LoadScene(const std::string& path, const std::string& sceneName, con
 	sceneJson.close();
 
 	auto o = json::parse(s);
-
+	//创建场景实体并添加组件
 	for (auto& obj : o)
 	{
 		auto& entity = ecsManager->AddEntity();
@@ -150,7 +152,7 @@ void  Scene::scene_AddComponent_MeshRenderer(Entity& e, json& j, Scene& scene)
 	//创建加载材质和加载贴图
 	int matID = j["Material"];
 
-	if (scene.meshs.count(matID) == 0)
+	if (scene.materials.count(matID) == 0)
 	{
 		Render::Material* m = new Render::Material();
 		m->LoadMaterialFromeJson(scene.assetInfo[matID], &scene);

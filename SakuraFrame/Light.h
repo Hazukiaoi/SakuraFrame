@@ -21,6 +21,7 @@ namespace Render
 		float Range;
 		LightType Type;
 		Color LightColor;
+		static std::string ComponentName() { return "LIGHT"; };
 
 		Light()
 		{

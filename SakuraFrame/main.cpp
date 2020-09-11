@@ -153,6 +153,17 @@ int main()
     GameCore::Scene scene;
     scene.LoadScene("F:/SakuraFrame/SakuraFrame/x64/Debug/SamScen/", "SampleScene.SFSce", "SampleScene_AssetsInfo.SceINF");
 
+    cout << "-------" << endl;
+
+    for (auto& e : scene.ecsManager->entities)
+    {
+        cout << e->name << " | "  << endl;
+        for (auto& c : e->componentArray)
+        {
+            cout << "\t" << c->ComponentName() << endl;
+        }
+
+    }
 
     getchar();
     return 0;
